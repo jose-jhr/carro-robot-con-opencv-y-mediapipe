@@ -1,7 +1,44 @@
 # carro-robot-con-opencv-y-mediapipe
 
-1) code complete.
+1) codigo completo al final de las instrucciones.
+ 
+
+2) en videos anteriores explicamos el codigo ejemplo o base, por ende partiremos desde la creación de la clase joystick(image,hand_landmarks), cuyos atributos son image y hand_landmarks en donde image sera la imagen que usaremos para dibujar todo lo que realizaremos de aqui en adelante, hand_landmarks(puntos de referencia de la mano) son los puntos de referencia que tendremos en cuenta mas adelante.
+
+```python
+joystick(image, hand_landmarks)
+```
+
+3) en este proyecto utilizare el punto de referencia que aparacen en la sigiente imagen.
+![hands](https://user-images.githubusercontent.com/66834393/188290312-ec85a116-0a5a-45ea-9b2f-d21461026e40.png)
+para ello el paso a seguir es capturar la posicion de este punto en X y Y.
+
+```python
+# getPosition point 9
+    pointX = int(hand_landmarks.landmark[handsMp.HandLandmark.MIDDLE_FINGER_MCP].x * width)
+    pointY = int(hand_landmarks.landmark[handsMp.HandLandmark.MIDDLE_FINGER_MCP].y * height)
+```
+
+4) una vez ya tenemos los puntos de referencia que usaremos, crearemos una nueva función que nos permitira inicialmente separar en divisiones iguales la pantalla
  ```python
+ drawSeparator(image, pointX, pointY)
+ ```
+ esta función nos acepta como parametros la imagen y los puntos de referencia tanto en X como en Y de la mano.
+ ```python
+ global saveSeparatorPoints
+    separatorHeight = int(height / 3)
+    separatorWidth = int(width / 3)
+ ```
+ en este caso decidi tomar 3 divisiones de ancho y 3 divisiones de alto, para un total de 9 puntos o cuadrantes, como se ve en la imagen.
+ 
+ 
+ 
+ 
+ 
+ ----------codigo completo---------------------
+ 
+
+```python
  # container generic detect hands in the mediapipe
 import time
 
@@ -199,33 +236,4 @@ serial.close()
 
 ```
 
-2) en videos anteriores explicamos el codigo ejemplo o base, por ende partiremos desde la creación de la clase joystick(image,hand_landmarks), cuyos atributos son image y hand_landmarks en donde image sera la imagen que usaremos para dibujar todo lo que realizaremos de aqui en adelante, hand_landmarks(puntos de referencia de la mano) son los puntos de referencia que tendremos en cuenta mas adelante.
-
-```python
-joystick(image, hand_landmarks)
-```
-
-3) en este proyecto utilizare el punto de referencia que aparacen en la sigiente imagen.
-![hands](https://user-images.githubusercontent.com/66834393/188290312-ec85a116-0a5a-45ea-9b2f-d21461026e40.png)
-para ello el paso a seguir es capturar la posicion de este punto en X y Y.
-
-```python
-# getPosition point 9
-    pointX = int(hand_landmarks.landmark[handsMp.HandLandmark.MIDDLE_FINGER_MCP].x * width)
-    pointY = int(hand_landmarks.landmark[handsMp.HandLandmark.MIDDLE_FINGER_MCP].y * height)
-```
-
-4) una vez ya tenemos los puntos de referencia que usaremos, crearemos una nueva función que nos permitira inicialmente separar en divisiones iguales la pantalla
- ```python
- drawSeparator(image, pointX, pointY)
- ```
- esta función nos acepta como parametros la imagen y los puntos de referencia tanto en X como en Y de la mano.
- ```python
- global saveSeparatorPoints
-    separatorHeight = int(height / 3)
-    separatorWidth = int(width / 3)
- ```
- en este caso decidi tomar 3 divisiones de ancho y 3 divisiones de alto, para un total de 9 puntos o cuadrantes, como se ve en la imagen.
- 
- 
  
