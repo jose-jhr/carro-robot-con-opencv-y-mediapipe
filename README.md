@@ -1,4 +1,6 @@
 # carro-robot-con-opencv-y-mediapipe
+
+1) code complete.
  ```python
  # container generic detect hands in the mediapipe
 import time
@@ -195,4 +197,10 @@ with handsMp.Hands(static_image_mode=False,
 cap.release()
 serial.close()
 
+```
+
+2) en videos anteriores explicamos el codigo ejemplo o base, por ende partiremos desde la creación de la clase joystick(image,hand_landmarks), cuyos atributos son image y hand_landmarks en donde image sera la imagen que usaremos para dibujar todo lo que realizaremos de aqui en adelante, hand_landmarks(puntos de referencia de la mano) son los puntos de referencia que tendremos en cuenta mas adelante.
+
+```python
+joystick(image, hand_landmarks)
 ```
