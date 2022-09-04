@@ -46,13 +46,67 @@ para dibujarlas hago uso de un for que me permite recorrer la pantalla y dibujar
   la funcion cv2.line me toma como parametros, la imagen, la coordenada de inicio y la coordenada final adicionalmente el color de la linea, ya que en este caso escogi azul esta acepta bgr, por ende el (255,0,0), por ultimo el ancho de la linea en este caso 2.
 ![image](https://user-images.githubusercontent.com/66834393/188292718-e3804fb1-afaf-4dc2-ad06-3d044473690e.png)
 
-5) en cuanto los puntos esten trazados en nuestra pantalla procedemos a guardar un array de valores en donde se encontraran los puntos de nuestro cuadrantes y los guardamos en la variable saveSeparatorPoints
+5) en cuanto los puntos esten trazados en nuestra pantalla procedemos a guardar un array de valores en donde se encontraran los puntos de nuestro cuadrantes y los guardamos en la variable arrayPoints
 asi se almacenan en nuestro array los puntos que separan nuestro cuadrantes.
 ![image](https://user-images.githubusercontent.com/66834393/188292783-88694577-63d3-414c-ba53-9d83d5aa80a0.png)
+para este ejemplo el tamaño de pantalla es de 640,480
 
+a continuación el codigo que almacena estas coordenadas en mi array, antes de proceder puse una variable booleana saveSeparatorPoints con el fin de no guardar cada vez que pase por esta seccion las coordenadas de estos puntos sino que solo una unica vez, reduciendo tiempo en procesamiento de información.
 
+ ```python
+    if saveSeparatorPoints is False:
+        for j in range(1, 4):
+            for k in range(1, 4):
+                arrayPoints.append([separatorWidth * k, separatorHeight * j])
+        saveSeparatorPoints = True
+        print(arrayPoints)
+  ```
+  
+  6) luego, el siguiente proceso es capturar el cuadrante en donde se detecto la mano, o el punto que en este proyecto se definio con el siguiente llamado a la funcion findArrayPoints, que retorna el cuadrante en donde se detecto la mano en las coordenadas especificas, para ello le enviamos como atributo, el arrayPoints y los puntos que anteriormente capturamos de la mano en especifico, pointX, pointY.
+ 
+ cabe resaltar que primero pregunto si el array fue cargado con la informacion para proceder como se ve a continuación.
+  
+  ```python
+     if saveSeparatorPoints is True:
+        cuadrantes = findArrayPoints(arrayPoints, pointX, pointY)
+   ```
+ 
+ 7) la funcion findArrayPoints depende de otra función para completar su tarea, por ende hace uso de findCuadrantes que le permite conocer el cuadrante especificamente de cada elemento, es decir de la posición de la mano en X y Y, como se muestra en las siguientes lineas de codigo.
+ 
+  ```python
+def findArrayPoints(arrayPoints, pointX, pointY):
+    cuadranteX = findCuadrantes(arrayPoints, pointX, 0)
+    cuadranteY = findCuadrantes(arrayPoints,pointY,1)
+    return [cuadranteX, cuadranteY]
+   ```
+8) metodo findCuadrantes, nos pide como parametros arrayPoints y la posicion si es en X o Y de la cual quieres conocer el cuadrante, por ende en el anterior codigo enviamos primero pointX y luego pointY, para especificar el eje decimos que si es 0, entonces es por que deseamos conocer la ubicación del ejeX de lo contrario si enviamos un 1 es por que deseamos la ubicacion en el cuadrante de pointY.
 
+```python
+
+# ejecutamos del bloque de deteccion
+def findCuadrantes(arrayPoints, point, eje):
+    cuadrante = 0
+    for i in range(0, len(arrayPoints)):
+        if arrayPoints[i][eje] > point:
+            if i > 0:
+                if point > arrayPoints[(i - 1)][eje]:
+                    cuadrante = i
+                    break
+            else:
+                cuadrante = 0
+                break
+
+    if eje == 1:
+        return int(cuadrante/3)
+    else:
+        return cuadrante
+
+ ```
  ----------codigo completo---------------------
+ 
+ tal cual como vemos en el codigo, este nos retorna en que cuadrante esta la posición que deseamos, haciendo un recorrido en donde se busca inicialmente encontrar que el valor del punto sea inferior al del cuadrante, si es asi, entonces se le pide al cuadrante anterior que revise si el punto es mayor que es, si esto se cumple es por que esta en medio de los dos puntos, con ello sabremos entonces el cuadrante en donde se encuentra el punto, en el caso del eje y que mencionamos anteriormente que se enviaba a la función un 1 es por que en la busqueda del array nos retornada valores como [0,3,6] y no valores como [0,1,2] que nos definan el cuadrante, por ende una solución sencilla fue dividirlo entre 3 y ya normalizamos los valores a un rango entre [0 y 2].
+ 
+ 
  
 
 ```python
