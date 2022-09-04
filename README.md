@@ -102,7 +102,7 @@ def findCuadrantes(arrayPoints, point, eje):
         return cuadrante
 
  ```
- ----------codigo completo---------------------
+
  
  tal cual como vemos en el codigo, este nos retorna en que cuadrante esta la posición que deseamos, haciendo un recorrido en donde se busca inicialmente encontrar que el valor del punto sea inferior al del cuadrante, si es asi, entonces se le pide al cuadrante anterior que revise si el punto es mayor que es, si esto se cumple es por que esta en medio de los dos puntos, con ello sabremos entonces el cuadrante en donde se encuentra el punto, en el caso del eje y que mencionamos anteriormente que se enviaba a la función un 1 es por que en la busqueda del array nos retornada valores como [0,3,6] y no valores como [0,1,2] que nos definan el cuadrante, por ende una solución sencilla fue dividirlo entre 3 y ya normalizamos los valores a un rango entre [0 y 2].
  
@@ -323,7 +323,12 @@ void loop() {
 }
 
 ```
- 
+
+
+  ----------codigo completo---------------------
+
+
+
 
 ```python
  # container generic detect hands in the mediapipe
