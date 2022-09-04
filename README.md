@@ -44,6 +44,13 @@ para dibujarlas hago uso de un for que me permite recorrer la pantalla y dibujar
   ```
   
   la funcion cv2.line me toma como parametros, la imagen, la coordenada de inicio y la coordenada final adicionalmente el color de la linea, ya que en este caso escogi azul esta acepta bgr, por ende el (255,0,0), por ultimo el ancho de la linea en este caso 2.
+![image](https://user-images.githubusercontent.com/66834393/188292718-e3804fb1-afaf-4dc2-ad06-3d044473690e.png)
+
+5) en cuanto los puntos esten trazados en nuestra pantalla procedemos a guardar un array de valores en donde se encontraran los puntos de nuestro cuadrantes y los guardamos en la variable saveSeparatorPoints
+asi se almacenan en nuestro array los puntos que separan nuestro cuadrantes.
+![image](https://user-images.githubusercontent.com/66834393/188292783-88694577-63d3-414c-ba53-9d83d5aa80a0.png)
+
+
 
  ----------codigo completo---------------------
  
