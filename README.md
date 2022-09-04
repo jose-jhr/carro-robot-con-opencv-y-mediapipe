@@ -25,16 +25,26 @@ para ello el paso a seguir es capturar la posicion de este punto en X y Y.
  ```
  esta función nos acepta como parametros la imagen y los puntos de referencia tanto en X como en Y de la mano.
  ```python
- global saveSeparatorPoints
+    global saveSeparatorPoints
     separatorHeight = int(height / 3)
     separatorWidth = int(width / 3)
  ```
  en este caso decidi tomar 3 divisiones de ancho y 3 divisiones de alto, para un total de 9 puntos o cuadrantes, como se ve en la imagen.
  
+![image](https://user-images.githubusercontent.com/66834393/188290766-fafdaa46-30bd-4014-b920-af0e2a8ebf5e.png)
  
- 
- 
- 
+para dibujarlas hago uso de un for que me permite recorrer la pantalla y dibujar estas lineas separadoras.
+
+ ```python
+     for i in range(1, 3):
+        # line horizontal
+        cv2.line(image, (0, int(separatorHeight * i)), (width, int(separatorHeight * i)), (255, 0, 0), 2)
+        # line vertical
+        cv2.line(image, (int(separatorWidth * i), 0), (int(separatorWidth * i), height), (255, 0, 0), 2)
+  ```
+  
+  la funcion cv2.line me toma como parametros, la imagen, la coordenada de inicio y la coordenada final adicionalmente el color de la linea, ya que en este caso escogi azul esta acepta bgr, por ende el (255,0,0), por ultimo el ancho de la linea en este caso 2.
+
  ----------codigo completo---------------------
  
 
