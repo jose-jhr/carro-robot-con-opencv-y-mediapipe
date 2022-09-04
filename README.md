@@ -106,7 +106,223 @@ def findCuadrantes(arrayPoints, point, eje):
  
  tal cual como vemos en el codigo, este nos retorna en que cuadrante esta la posición que deseamos, haciendo un recorrido en donde se busca inicialmente encontrar que el valor del punto sea inferior al del cuadrante, si es asi, entonces se le pide al cuadrante anterior que revise si el punto es mayor que es, si esto se cumple es por que esta en medio de los dos puntos, con ello sabremos entonces el cuadrante en donde se encuentra el punto, en el caso del eje y que mencionamos anteriormente que se enviaba a la función un 1 es por que en la busqueda del array nos retornada valores como [0,3,6] y no valores como [0,1,2] que nos definan el cuadrante, por ende una solución sencilla fue dividirlo entre 3 y ya normalizamos los valores a un rango entre [0 y 2].
  
+9)volviendo al paso 7 vemos que una vez tenemos los cuadrantes este nos retornara un arreglo como el siguiente [0,1] en donde se especifica realmente el cuadran en el que esta la mano detectada.
+
+10) una vez tenemos los cuadrantes no queda mas que saber que direccion le asignaremos a cada cuadrante, para ello las siguientes condiciones.
+
+```python
+        if cuadrantes == [0,0]:
+            arrDer()
+        elif cuadrantes == [1,0]:
+            arr()
+        elif cuadrantes == [2,0]:
+            arrIzq()
+
+        elif cuadrantes == [0,1]:
+            der()
+        elif cuadrantes == [1,1]:
+            centro()
+        elif cuadrantes == [2,1]:
+            izq()
+
+        elif cuadrantes == [0,2]:
+            abaDer()
+        elif cuadrantes == [1,2]:
+            abajo()
+        elif cuadrantes == [2,2]:
+            abaizq()
+```
+11) cada una de estas condiciones llama a una funcion definida.
+```python
+def arrDer():
+    sendBluetoothCar('e')
+    print("arriba derecha")
+def arr():
+    sendBluetoothCar("w")
+    print("arriba")
+def arrIzq():
+    sendBluetoothCar('q')
+    print("arriba izquierda")
+
+def der():
+    sendBluetoothCar('a')
+    print("derecha")
+def centro():
+    sendBluetoothCar('s')
+    print("centro")
+def izq():
+    sendBluetoothCar('d')
+    print("izquierda")
+
+def abaDer():
+    sendBluetoothCar('z')
+    print("abajo derecha")
+def abajo():
+    sendBluetoothCar('x')
+    print("abajo")
+def abaizq():
+    sendBluetoothCar('c')
+    print("abajo izquierda")
+
+def error():
+    print("error")
+ ```
+ 12) cada función ademas de ello, envia un caracter correspondiente a Arduino llamando a la siguiente función.
+
+ ```python
+ def sendBluetoothCar(character):
+    serial.write(character.encode())
+ ```
+ este se codifica y se envia a arduino.
  
+ 
+ con ello damos por terminado este proyecto de aqui en adelante solo es implementar el codigo arduino que pegare en esta seccion y buscar mas opciones de uso, si te gusto suscribete, y gracias por el tiempo que te tomes en leer esto, gracias.
+ 
+ https://www.youtube.com/c/INGENIER%C3%8DAJHR
+ 
+ 
+CODIGO ARDUINO.
+
+```C++
+#include<Servo.h>
+Servo Serv;
+char rxDato;
+
+String conChar,Grados;
+
+int velocidad=200,gServo;
+int diferencia=50;
+
+#define PwmI 8
+#define PwmD 9
+#define LlantaIT 10
+#define LlantaID 11
+#define LlantaDT 12
+#define LlantaDD 13
+
+void setup() {
+Serial3.begin(9600);
+pinMode(LlantaIT,OUTPUT);
+pinMode(LlantaID,OUTPUT);
+pinMode(LlantaDT,OUTPUT);
+pinMode(LlantaDD,OUTPUT);
+Serv.attach(3);
+Serv.write(90);
+
+}
+
+void loop() {
+  if(Serial3.available()>0){
+    rxDato=Serial3.read();
+    //Serial3.print(rxDato);
+    if(rxDato=='v'){
+      delay(10);
+      while(Serial3.available()){
+        rxDato=Serial3.read();
+        conChar=conChar+rxDato;
+      }
+      velocidad=conChar.toInt();//0,100,130,240
+      velocidad=map(velocidad,0,100,100,255);
+      //Serial3.println(conChar);
+      conChar="";//v200
+    }
+    if(rxDato=='g'){        
+      rxDato=Serial3.read();
+      delay(10);
+      while(Serial3.available()){
+        rxDato=Serial3.read();
+        Grados=Grados+rxDato;
+      }
+      gServo=Grados.toInt();
+      Serv.write(gServo);
+      Grados="";
+    }
+  }
+  //HACIA ADELANTA
+  if(rxDato=='w'){
+   digitalWrite(LlantaIT,LOW);
+   digitalWrite(LlantaDT,LOW);
+   digitalWrite(LlantaID,HIGH);
+   digitalWrite(LlantaDD,HIGH);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad);
+  }
+  //HACIA ATRAS
+  if(rxDato=='x'){
+   digitalWrite(LlantaIT,HIGH);
+   digitalWrite(LlantaDT,HIGH);
+   digitalWrite(LlantaID,LOW);
+   digitalWrite(LlantaDD,LOW);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad);
+  }
+  //HACIA LA DERECHA
+  if(rxDato=='a'){
+   digitalWrite(LlantaIT,HIGH);
+   digitalWrite(LlantaDT,LOW);
+   digitalWrite(LlantaID,LOW);
+   digitalWrite(LlantaDD,HIGH);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad); 
+  }
+
+  //HACIA LA IZQUIERDA
+  if(rxDato=='d'){
+   digitalWrite(LlantaIT,LOW);
+   digitalWrite(LlantaDT,HIGH);
+   digitalWrite(LlantaID,HIGH);
+   digitalWrite(LlantaDD,LOW);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad);
+  }
+  //DETIENE
+  if(rxDato=='s'){
+   digitalWrite(LlantaIT,LOW);
+   digitalWrite(LlantaDT,LOW);
+   digitalWrite(LlantaID,LOW);
+   digitalWrite(LlantaDD,LOW);
+   analogWrite(PwmI,0);
+   analogWrite(PwmD,0);
+  }
+  //HACIA LA DERECHA ARRIBA
+   if(rxDato=='e'){
+   digitalWrite(LlantaIT,LOW);
+   digitalWrite(LlantaDT,LOW);
+   digitalWrite(LlantaID,HIGH);
+   digitalWrite(LlantaDD,HIGH);
+   analogWrite(PwmI,velocidad-diferencia);
+   analogWrite(PwmD,velocidad);
+  }
+  //HACIA LA IZQUIERDA ADELANTE
+  if(rxDato=='q'){
+   digitalWrite(LlantaIT,LOW);
+   digitalWrite(LlantaDT,LOW);
+   digitalWrite(LlantaID,HIGH);
+   digitalWrite(LlantaDD,HIGH);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad-diferencia);
+  }
+  //HACIA LA IZQUIERDA ATRAS
+  if(rxDato=='z'){
+   digitalWrite(LlantaIT,HIGH);
+   digitalWrite(LlantaDT,HIGH);
+   digitalWrite(LlantaID,LOW);
+   digitalWrite(LlantaDD,LOW);
+   analogWrite(PwmI,velocidad);
+   analogWrite(PwmD,velocidad-diferencia);
+  }
+  //HACIA LA DERECHA ATRAS
+  if(rxDato=='c'){
+   digitalWrite(LlantaIT,HIGH);
+   digitalWrite(LlantaDT,HIGH);
+   digitalWrite(LlantaID,LOW);
+   digitalWrite(LlantaDD,LOW);
+   analogWrite(PwmI,velocidad-diferencia);
+   analogWrite(PwmD,velocidad);
+  }
+}
+
+```
  
 
 ```python
@@ -117,7 +333,7 @@ import mediapipe as mp
 import cv2
 import serial
 
-serial = serial.Serial('COM17',9600,timeout=1)
+serial = serial.Serial('COM17',9600)
 time.sleep(1)
 
 
